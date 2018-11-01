@@ -1,7 +1,10 @@
+#视频自动切分
+#多进程版本
 import os
 import subprocess
 from multiprocessing import Pool
 import time
+
 
 #TODO 需要填写的部分
 #ffmpeg所在位置
@@ -32,10 +35,8 @@ def cutVideo(ffmpeg_path,input_file,start_time,dur_time,output_name):
         return 0
 
 if __name__=='__main__':
-    cts=time.time()
-    print(cts)
     # 所有的二级文件夹，如果一级文件夹下有文件会被跳过，只保留文件夹
-    s_paths = [p for p in os.listdir(file_path) if os.path.isdir(os.path.join(file_path, p))][0:1]
+    s_paths = [p for p in os.listdir(file_path) if os.path.isdir(os.path.join(file_path, p))]
     # print(s_paths)
     # 判断是否有缺失视频的情况，即帧图片的视频不在视频文件夹中
     if set(s_paths) - set([v[:-4] for v in os.listdir(video_path)]):
@@ -44,6 +45,8 @@ if __name__=='__main__':
     print(s_paths)
 
     for i,f in enumerate(s_paths):
+        loop_start_time = time.time()
+        print(loop_start_time)
         print('开始处理视频：'+f,'当前是第'+str(i+1)+'段','共'+str(len(s_paths))+'段视频')
         # 如果输出视频文件夹不存在就创建
         if not os.path.exists(os.path.join(output_path,f)):
@@ -53,7 +56,7 @@ if __name__=='__main__':
         start_time_list=[pic_time-pic_time%60 for pic_time in pic_time_list]
         print(sorted(list(set(start_time_list))))
         #多进程同时处理
-        p=Pool(8)
+        p=Pool(4)
         for st in sorted(list(set(start_time_list))):
             start_time=str(st)
             input_file=os.path.join(video_path,f+'.mp4')
@@ -63,5 +66,5 @@ if __name__=='__main__':
         p.close()
         p.join()
         print('All subprocesses done.')
-    print(time.time()-cts)
+        print(time.time()-loop_start_time)
 

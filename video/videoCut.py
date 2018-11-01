@@ -18,9 +18,9 @@ dur_time='60'
 s_paths=[p for p in os.listdir(file_path) if os.path.isdir(os.path.join(file_path,p))]
 #print(s_paths)
 #判断是否有缺失视频的情况，即帧图片的视频不在视频文件夹中
-if set(s_paths)-set(os.listdir(video_path)):
-    print('！！！以下视频不存在：',set(s_paths)-set(os.listdir(video_path)))
-    s_paths=list(set(s_paths)&set(os.listdir(video_path)))
+if set(s_paths)-set([v[:-4] for v in os.listdir(video_path)]):
+    print('！！！以下视频不存在：',set(s_paths)-set([v[:-4] for v in os.listdir(video_path)]))
+    s_paths=list(set(s_paths)&set([v[:-4] for v in os.listdir(video_path)]))
 
 print(s_paths)
 for i,f in enumerate(s_paths):
@@ -29,8 +29,8 @@ for i,f in enumerate(s_paths):
     if not os.path.exists(os.path.join(output_path,f)):
         os.makedirs(os.path.join(output_path,f))
     for pic in os.listdir(os.path.join(file_path,f)):
-        input_file=os.path.join(video_path,f)
-        pic_time=int(pic.split('.')[0])
+        input_file=os.path.join(video_path,f+'.mp4')
+        pic_time=int(pic.split('.')[0])*10
         start_time=str(pic_time-pic_time%60)
         output_name=output_path+'/'+f+'/'+start_time+'.mp4'
         if os.path.exists(output_name): #如果已经有该片段了就直接跳过，否则会导致ffmpeg命令询问是否需要覆盖而卡住
