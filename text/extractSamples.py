@@ -2,7 +2,20 @@ import os
 import jieba
 
 
-def extract_samples(record_path, ori_path, save_path, stop_words):
+def extract_samples(record_path = "//10.200.42.124/videos/segments",
+                    ori_path = "data/text",
+                    save_path = "data/samples"):
+    '''
+    将精彩片段抽取出来，正例反例分开
+    :param record_path:
+    :param ori_path:
+    :param save_path:
+    :return:
+    '''
+    #with open("data/stopwords.txt",encoding='utf8') as f:
+        #stop_words=set(f.read().split('\n'))
+    stop_words = {' ', '，', '？', '囡囡', '囡', '\n', '嗯', '！', '吖', '了', '。', '唉', '呀'}
+
     count=0
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -55,7 +68,4 @@ if __name__=='__main__':
     record_path = "//10.200.42.124/videos/segments"
     ori_path = "data/text"
     save_path = "data/samples"
-    #with open("data/stopwords.txt",encoding='utf8') as f:
-        #stop_words=set(f.read().split('\n'))
-    stop_words = {' ', '，', '？', '囡囡', '囡', '\n', '嗯', '！', '吖', '了', '。', '唉', '呀'}
-    extract_samples(record_path, ori_path, save_path, stop_words)
+    extract_samples(record_path, ori_path, save_path)
