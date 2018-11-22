@@ -71,7 +71,7 @@ if __name__=='__main__':
     # process data
     pos_file="data/samples/positive.txt"
     neg_file="data/samples/negative.txt"
-    train_file, test_file=process_data(pos_file,neg_file,correct=4)
+    train_file, test_file=process_data(pos_file,neg_file,correct=6)
     classifier = fasttext.supervised(train_file,'model/fasttext.model',label_prefix='__label__', )
     result = classifier.test(train_file,k=1)
     print("平均F", result.precision, result.recall)  # 准确率
