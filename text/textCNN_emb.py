@@ -5,11 +5,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch.utils.data
 from torch.autograd import Variable
-from gensim.models import Word2Vec
 import random
 
-
-#采用word2vec做固定词向量嵌入
+#采用随机word embedding
 # text CNN net
 class MultiCNNText(nn.Module):
     def __init__(self, opt):
@@ -172,6 +170,7 @@ def get_tensor(wv_path, pos_sample_path, neg_sample_path, dim=256):
     :return:
     '''
     # load text
+
     all_words = []
     with open(pos_sample_path, encoding='utf8') as f:
         txt = f.read().strip()
