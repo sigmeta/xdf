@@ -1,9 +1,13 @@
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
 from xgboost.sklearn import XGBClassifier
-from sklearn.metrics import precision_score,roc_auc_score,recall_score,f1_score
+from sklearn.metrics import precision_score,roc_auc_score,recall_score,f1_score,accuracy_score
 import numpy as np
 
+
+'''
+tf-idf + xgboost 对文本进行分类。 tf-idf 直接提取文本特征
+'''
 
 def get_matrix(pos_path="data/samples/positive.txt", neg_path="data/samples/negative.txt"):
     dataset=[]
@@ -68,13 +72,14 @@ def train_test_split(pos_matrix, neg_matrix, train_prop=0.7, repeats=1):
     #shuffle
     np.random.shuffle(pos_matrix)
     np.random.shuffle(neg_matrix)
+    neg_matrix=neg_matrix[:len(pos_matrix)]
     #split data
     pos_train_size=int(pos_matrix.shape[0]*train_prop)
     neg_train_size=int(neg_matrix.shape[0]*train_prop)
 
     train_pos=pos_matrix[:pos_train_size]
     train_neg=neg_matrix[:neg_train_size]
-    train_pos=np.tile(train_pos,(repeats,1))
+    #train_pos=np.tile(train_pos,(repeats,1))
     test_pos=pos_matrix[pos_train_size:]
     test_neg=neg_matrix[neg_train_size:]
     #test_pos=np.tile(test_pos,(6,1))
@@ -95,16 +100,18 @@ def get_metrics(pre_y,y):
     pre_score = precision_score(y,pre_y)
     rec_score=recall_score(y,pre_y)
     f_score=f1_score(y,pre_y)
-
+    acc_score=accuracy_score(y,pre_y)
     print("xgb_auc_score:",auc_score)
     print("xgb_pre_score:",pre_score)
     print("xgb_rec_score:",rec_score)
     print("xgb_f1_score:",f_score)
-    return auc_score, pre_score, rec_score, f_score
+    print("acc_scure:",acc_score)
+    return auc_score, pre_score, rec_score, f_score,acc_score
 
 
-pos_matrix, neg_matrix=get_matrix()
-x_train, y_train, x_test, y_test=train_test_split(pos_matrix, neg_matrix, train_prop=0.7, repeats=4)
+pos_matrix, neg_matrix=get_matrix(pos_path="nb/samples/pos_a.txt",neg_path="nb/samples/n.txt")
+#pos_matrix, neg_matrix=get_matrix()
+x_train, y_train, x_test, y_test=train_test_split(pos_matrix, neg_matrix, train_prop=0.7, repeats=1)
 
 xgbc = XGBClassifier()
 xgbc.fit(x_train,y_train)

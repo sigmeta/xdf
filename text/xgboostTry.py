@@ -1,9 +1,12 @@
 import numpy as np
-import sklearn
 from xgboost.sklearn import XGBClassifier
-from sklearn.metrics import precision_score,roc_auc_score,recall_score,f1_score
+from sklearn.metrics import precision_score,roc_auc_score,recall_score,f1_score,accuracy_score
 from gensim.models import Word2Vec
 
+
+'''
+对文本采用word2vec抽取词向量求平均值，使用xgboost分类
+'''
 
 def train_test_split(pos_matrix, neg_matrix, train_prop=0.7, repeats=6):
     '''
@@ -13,6 +16,7 @@ def train_test_split(pos_matrix, neg_matrix, train_prop=0.7, repeats=6):
     #shuffle
     np.random.shuffle(pos_matrix)
     np.random.shuffle(neg_matrix)
+    neg_matrix = neg_matrix[:len(pos_matrix)]
     #split data
     pos_train_size=int(pos_matrix.shape[0]*train_prop)
     neg_train_size=int(neg_matrix.shape[0]*train_prop)
@@ -35,12 +39,13 @@ def get_metrics(pre_y,y):
     pre_score = precision_score(y,pre_y)
     rec_score=recall_score(y,pre_y)
     f_score=f1_score(y,pre_y)
-
+    acc_score=accuracy_score(y,pre_y)
     print("xgb_auc_score:",auc_score)
     print("xgb_pre_score:",pre_score)
     print("xgb_rec_score:",rec_score)
     print("xgb_f1_score:",f_score)
-    return auc_score, pre_score, rec_score, f_score
+    print("acc_scure:",acc_score)
+    return auc_score, pre_score, rec_score, f_score,acc_score
 
 
 def get_matrix(wv="model/word2vec/word2vec",pos_path="data/samples/positive.txt",neg_path="data/samples/negative.txt"):
@@ -68,7 +73,7 @@ def get_matrix(wv="model/word2vec/word2vec",pos_path="data/samples/positive.txt"
 
 if __name__=='__main__':
     xgbc = XGBClassifier()
-    pos_matrix, neg_matrix = get_matrix()
+    pos_matrix, neg_matrix = get_matrix(pos_path="nb/samples/pos_a.txt",neg_path="nb/samples/n.txt")
 
     x_train, y_train, x_test, y_test=train_test_split(pos_matrix, neg_matrix, train_prop=0.7,repeats=1)
     print("Data processing completed")

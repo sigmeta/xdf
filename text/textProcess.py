@@ -45,7 +45,8 @@ def text_process(ori_path = "//10.200.42.124/videos/text",
     return 0
 
 
-def text_process2():
+def text_process2(ori_path = "//10.200.42.124/videos/text",
+                 save_path = "data/text_by_sen"):
     pass
 
 

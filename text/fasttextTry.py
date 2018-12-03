@@ -1,8 +1,6 @@
 import fasttext
 import random
 import os
-from text.extractSamples import extract_samples
-from text.textProcess import text_process
 
 
 def process_data(positive_data, negative_data, save_path="data/fasttext", correct=6):
@@ -59,7 +57,8 @@ def validate(classifier, file_path):
     print(tp, fp, fn, tn)
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
-    print(precision, recall, 2 * precision * recall / (precision + recall))
+    accuracy=(tp+tn)/(tp+fp+fn+tn)
+    print(precision, recall, 2 * precision * recall / (precision + recall), accuracy)
     return 0
 
 
@@ -69,10 +68,12 @@ if __name__=='__main__':
     # extract samples
     #extract_samples(record_path = "//10.200.42.124/videos/segments",ori_path = "data/text2",save_path = "data/samples2")
     # process data
-    pos_file="data/samples/positive.txt"
-    neg_file="data/samples/negative.txt"
-    train_file, test_file=process_data(pos_file,neg_file,correct=6)
-    classifier = fasttext.supervised(train_file,'model/fasttext.model',label_prefix='__label__', )
+    #pos_file="data/samples/positive.txt"
+    #neg_file="data/samples/negative.txt"
+    pos_file = "nb/samples/pos_a.txt"
+    neg_file="nb/samples/n.txt"
+    train_file, test_file=process_data(pos_file,neg_file,correct=1)
+    classifier = fasttext.supervised(train_file,'model/fasttext.model',label_prefix='__label__', ws=5  ,epoch=100, dim=100)
     result = classifier.test(train_file,k=1)
     print("平均F", result.precision, result.recall)  # 准确率
     print("Number of examples:", result.nexamples)

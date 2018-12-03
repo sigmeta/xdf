@@ -8,6 +8,7 @@ from torch.autograd import Variable
 import random
 from xpinyin import Pinyin
 
+
 #采用随机word embedding
 # text CNN net
 class MultiCNNText(nn.Module):

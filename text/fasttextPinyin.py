@@ -1,10 +1,12 @@
 import fasttext
 import random
 import os
-from text.extractSamples import extract_samples
-from text.textProcess import text_process
 from xpinyin import Pinyin
 
+
+'''
+将分词后的文本转为拼音，使用fasttext进行分类
+'''
 
 def process_data(positive_data, negative_data, save_path="data/fasttext", correct=6):
     '''

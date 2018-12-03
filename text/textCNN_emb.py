@@ -226,13 +226,14 @@ def get_tensor(wv_path, pos_sample_path, neg_sample_path, dim=256):
 if __name__=='__main__':
     print("starting ...")
     # 从已经分好词的文本中抽取特征矩阵
-    emb_num, max_len, trainloader, testloader = get_tensor("model/word2vec/word2vec", "data/samples/positive.txt", "data/samples/negative.txt")
-
+    #emb_num, max_len, trainloader, testloader = get_tensor("model/word2vec/word2vec", "data/samples/positive.txt", "data/samples/negative.txt")
+    emb_num, max_len, trainloader, testloader = get_tensor("model/word2vec/word2vec", "nb/samples/pos_a.txt",
+                                                           "nb/samples/n.txt")
     opt={}
     opt["content_dim"] = 256
     opt["embedding_dim"]=256
     opt["linear_hidden_size"]=128
-    opt["content_seq_len"]=225
+    opt["content_seq_len"]=max_len
     opt["embedding_num"]=emb_num
 
     net = MultiCNNText(opt)
